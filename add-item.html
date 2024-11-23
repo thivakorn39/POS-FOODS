@@ -212,45 +212,7 @@
                 }
             });
         }
-    </script>
-
-
-    <script>
-        let url = "//";
-        let file = document.querySelector("input[type='file']");
-        let img = document.querySelector("img");
-        let nameIdInput = document.getElementById("nameId");
-        let roleId = document.getElementById("roleId");
-        let numberIdInput = document.getElementById("numberId");
-        let submitBtn = document.getElementById("submitBtn");
-
-        submitBtn.addEventListener('click', () => {
-            let fr = new FileReader();
-            fr.addEventListener('loadend', () => {
-                let res = fr.result;
-                img.src = res;
-                let spt = res.split("base64,")[1];
-
-                let obj = {
-                    base64: spt,
-                    type: file.files[0].type,
-                    name: file.files[0].name,
-                    nameId: nameIdInput.value,
-                    roleId: roleId.value,
-                    numberId: numberIdInput.value
-                }
-
-                fetch(url, {
-                    method: "POST",
-                    body: JSON.stringify(obj)
-                })
-                    .then(r => r.text())
-                    .then(data => console.log(data))
-            })
-
-            fr.readAsDataURL(file.files[0]);
-        });
-    </script>
+    </script>    
 </body>
 
 </html>
