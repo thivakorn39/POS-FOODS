@@ -127,8 +127,6 @@
     </div>
 
     <script>
-        const url = "https://script.google.com/macros/s/AKfycbwYTx83GLW9CNElF7l5kwFQ2e-s7UAuaRb1yczh7JoHPVw4F7qHTq4kNgZ2lcn3gZ3a/exec";
-
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function () {
@@ -139,10 +137,10 @@
         }
 
         function saveItem() {
-            const itemName = document.getElementById('item-name').value;
-            const itemPrice = document.getElementById('item-price').value;
+            const itemName = document.getElementById('item-name').value.trim();
+            const itemPrice = document.getElementById('item-price').value.trim();
             const itemCategory = document.getElementById('item-category').value;
-            const itemDescription = document.getElementById('item-description').value;
+            const itemDescription = document.getElementById('item-description').value.trim();
             const itemImageFile = document.getElementById('item-image').files[0];
 
             if (!itemName || !itemPrice || !itemCategory || !itemImageFile) {
@@ -166,26 +164,30 @@
                     imageURL: imageURL.split(',')[1],
                 };
 
+                const url = "https://script.google.com/macros/s/AKfycbwL9vfJNHraTeGjJzNUABx3HqUTNt6_N7ZIyZQcw2heVQx6DMPo0S4dr3SW8Lo5gIVL/exec"; // Replace with the script URL
                 fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    mode: 'cors',
                     body: JSON.stringify(formData)
                 })
                     .then(response => response.json())
                     .then(data => {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'บันทึกข้อมูลสำเร็จ!',
-                            text: 'สินค้าของคุณถูกเพิ่มเรียบร้อยแล้ว'
-                        });
-                        clearForm();
+                        if (data.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'บันทึกข้อมูลสำเร็จ!',
+                                text: `สินค้าของคุณถูกเพิ่มเรียบร้อยแล้ว\nไฟล์: ${data.fileUrl}`
+                            });
+                            clearForm();
+                        } else {
+                            throw new Error(data.error || "Unknown error occurred");
+                        }
                     })
                     .catch(error => {
                         Swal.fire({
                             icon: 'error',
                             title: 'เกิดข้อผิดพลาด',
-                            text: 'ไม่สามารถบันทึกข้อมูลได้'
+                            text: error.message
                         });
                     });
             };
