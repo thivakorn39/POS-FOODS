@@ -1,0 +1,453 @@
+<html>
+
+<head>
+    <title>
+        Food Ordering Page
+    </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+        }
+
+        .select-a-table {
+            margin-bottom: 20px;
+        }
+
+        .select-a-table select {
+            width: 100%;
+            /* กำหนดให้เต็มความกว้างของ container */
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+        }
+
+        .select-a-table select option:first-child {
+            color: #999;
+            /* สีข้อความสำหรับตัวเลือกแรก */
+        }
+
+
+
+        .menu {
+            flex: 3;
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px;
+            background-color: #fff;
+            overflow-y: auto;
+            /* เพิ่มการเลื่อนในแนวตั้ง */
+            max-height: 85vh;
+            /* จำกัดความสูง */
+        }
+
+        .menu-item {
+            width: 20%;
+            /* ปรับขนาดไอเท็มให้อยู่ในขอบเขต */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .menu-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .menu-item p {
+            text-align: center;
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+
+        .order-rice {
+            max-height: 200px;
+            /* กำหนดความสูงสูงสุด */
+            overflow-y: auto;
+            /* แสดง scroll bar หากเนื้อหาเกิน */
+            padding-right: 10px;
+            /* เพิ่ม padding เผื่อ scroll bar */
+        }
+
+
+        .order-summary {
+            flex: 1;
+            background-color: #f9f9f9;
+            padding: 20px;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .order-summary h2 {
+            font-size: 18px;
+            margin: 0 0 20px 0;
+        }
+
+        .order-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .order-item p {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        .order-total {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .order-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .order-actions button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .order-actions .save {
+            background-color: #8bc34a;
+            color: #fff;
+        }
+
+        .order-actions .pay {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #2c3e50;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer div {
+            text-align: center;
+            color: #fff;
+        }
+
+        .footer i {
+            font-size: 20px;
+        }
+
+        .footer p {
+            margin: 5px 0 0 0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="menu">
+            <div class="menu-item">
+                <img alt="ข้าวผัดหมู" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/Efua0CLJbA2RDKdjP4qDe5fSxkGD9x7yxCI5AT7fFirEg5NPB.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดหมู
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวกระเพราหมู" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/otFSwyLeXXyvEyLIVN0MftDppC9e8GK733hJ8o4KIGcgw8mnA.jpg"
+                    width="100" />
+                <p>
+                    ข้าวกระเพราหมู
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวผัดกุ้ง" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/nJltCmRkGXbiL1FeRdY99J3ryyQDJfaZk0qGi1vCYkePw8mnA.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดกุ้ง
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวกระเพราเนื้อ" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/9IlBfzTV5ZVHQ6fSmChPS5UctwrnLOwNgsY09Me5wLXbw8mnA.jpg"
+                    width="100" />
+                <p>
+                    ข้าวกระเพราเนื้อ
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวผัดแกงเขียวหวาน" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/ymZJ1x3ZttIRLlaxUoF5kDlERl4xH99pILMSXLWIqdiCm38E.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดแกงเขียวหวาน
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวผัดไก่" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/2AKyK9t1YIoQF58FzMoQwFLoeeTPSZL7tbGaEHnYw3tev8mnA.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดไก่
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวผัดคุนเชียง" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/m2Sfh2KRGZ2GRKGQtzWNULXbQKsIZv1BlSGvREChzdZAMv5JA.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดคุนเชียง
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวผัดทะเล" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/vcy0HNwhugKCBh6cfbS9a2NEA1oyFQNai8zPZ8f99v1UYemnA.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดทะเล
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวผัดปลากระป๋อง" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/JWL69A9efDrAjkNYEY8vnYeXte9e72jX5E6KIItMiVpkfl38E.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดปลากระป๋อง
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวผัดหมูกรอบ" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/e8RATa2h1MWILqi0r9kDtkR5BZybdSr36fkWcpAvtKjIYemnA.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดหมูกรอบ
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวผัดอเมริกัน" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/rjbSWKJKaNbkDlQsbs4ZelPVVAZEAbCYs6HXNETCNXiIMv5JA.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดอเมริกัน
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวผัดปลากระพง" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/SesqiR7XVpSEfEF6gbo6EGs9dsOBbnXafp9PexPkJXD7g5NPB.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดปลากระพง
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวกระเพราทะเล" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/xtA8aL3KKN6nFJ1HEw10fI4TBfQ0PELJfVGYbLeZTkCNg5NPB.jpg"
+                    width="100" />
+                <p>
+                    ข้าวกระเพราทะเล
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="ข้าวผัดแหนม" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/6lqBPCutt8qNEtHozzv5uHUOpYZMxlrOhDjQKNlqm5uBm38E.jpg"
+                    width="100" />
+                <p>
+                    ข้าวผัดแหนม
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="กุ้งเผา" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/dvhI9CoJ0L57IVFybGXTlEJc5JWhbePMpCTyfQELoqwTYemnA.jpg"
+                    width="100" />
+                <p>
+                    กุ้งเผา
+                </p>
+            </div>
+            <div class="menu-item">
+                <img alt="หอยแครงลวก" height="100"
+                    src="https://storage.googleapis.com/a1aa/image/uB6vxUselnVer0eNBfz8P1yewdGH8bobn2eSFjf3lSS0FMv5JA.jpg"
+                    width="100" />
+                <p>
+                    หอยแครงลวก
+                </p>
+            </div>
+        </div>
+        <div class="order-summary">
+            <div class="select-a-table">
+                <h2>เลือกโต๊ะ</h2>
+                <select id="table-selection">
+                    <option value="" disabled selected>-- กรุณาเลือกโต๊ะ --</option>
+                    <option value="0">กลับบ้าน</option>
+                    <option value="1">โต๊ะ 1</option>
+                    <option value="2">โต๊ะ 2</option>
+                    <option value="3">โต๊ะ 3</option>
+                    <option value="4">โต๊ะ 4</option>
+                    <option value="5">โต๊ะ 5</option>
+                    <option value="6">โต๊ะ 6</option>
+                    <option value="7">โต๊ะ 7</option>
+                    <option value="8">โต๊ะ 8</option>
+                    <option value="9">โต๊ะ 9</option>
+                    <option value="10">โต๊ะ 10</option>
+                </select>
+            </div>
+
+            <div class="order-rice">
+                <div class="order-item">
+                    <p>
+                        กุ้งเผา
+                    </p>
+                    <p>
+                        ฿400.00
+                    </p>
+                </div>
+                <div class="order-item">
+                    <p>
+                        กุ้งเผา
+                    </p>
+                    <p>
+                        ฿400.00
+                    </p>
+                </div>
+                <div class="order-item">
+                    <p>
+                        กุ้งเผา
+                    </p>
+                    <p>
+                        ฿400.00
+                    </p>
+                </div>
+                <div class="order-item">
+                    <p>
+                        สุ่มเห็ดกุ้ง
+                    </p>
+                    <p>
+                        ฿50.00
+                    </p>
+                </div>
+                <div class="order-item">
+                    <p>
+                        หมี่ผัดผักกระเฉด
+                    </p>
+                    <p>
+                        ฿75.00
+                    </p>
+                </div>
+                <div class="order-item">
+                    <p>
+                        ข้าวผัดหมูกรอบ
+                    </p>
+                    <p>
+                        ฿50.00
+                    </p>
+                </div>
+                <div class="order-item">
+                    <p>
+                        ข้าวผัดปลากระป๋อง
+                    </p>
+                    <p>
+                        ฿60.00
+                    </p>
+                </div>
+                <div class="order-item">
+                    <p>
+                        ข้าวผัดกุ้ง
+                    </p>
+                    <p>
+                        ฿60.00
+                    </p>
+                </div>
+            </div>
+            <div class="order-total">
+                <p>
+                    ภาษี
+                </p>
+                <p>
+                    ฿44.45
+                </p>
+            </div>
+            <div class="order-total">
+                <p>
+                    ยอดรวม
+                </p>
+                <p>
+                    ฿679.45
+                </p>
+            </div>
+            <div class="order-actions">
+                <button class="save">
+                    บันทึก
+                </button>
+                <button class="pay">
+                    ชำระเงิน
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div>
+            <i class="fas fa-bars"></i>
+            </i>
+        </div>
+        <div>
+            <i class="fas fa-receipt"></i>
+            </i>
+            <p>
+                บิล
+            </p>
+        </div>
+        <div>
+            <i class="fas fa-utensils">
+            </i>
+            <p>
+                ข้าว
+            </p>
+        </div>
+        <div>
+            <i class="fas fa-bacon">
+            </i>
+            <p>
+                เส้น
+            </p>
+        </div>
+        <div>
+            <i class="fas fa-coffee">
+            </i>
+            <p>
+                เครื่องดื่ม
+            </p>
+        </div>
+        <div>
+            <i class="far fa-file">
+            </i>
+            <p>
+                รายการ
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

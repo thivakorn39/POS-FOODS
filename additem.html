@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Item</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
+    <style>
+        /* Styles remain unchanged */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .form-group .preview {
+            display: block;
+            margin-top: 10px;
+            border-radius: 5px;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .actions button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .actions .save {
+            background-color: #8bc34a;
+            color: white;
+        }
+
+        .actions .cancel {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>เพิ่มสินค้าใหม่</h1>
+        <form id="add-item-form">
+            <div class="form-group">
+                <label for="item-name">ชื่อสินค้า</label>
+                <input type="text" id="item-name" placeholder="กรอกชื่อสินค้า">
+            </div>
+            <div class="form-group">
+                <label for="item-price">ราคา (บาท)</label>
+                <input type="number" id="item-price" placeholder="กรอกราคา">
+            </div>
+            <div class="form-group">
+                <label for="item-image">อัพโหลดภาพ</label>
+                <input type="file" id="item-image" accept="image/*" onchange="previewImage(event)">
+                <img id="image-preview" class="preview" alt="Preview" />
+            </div>
+            <div class="form-group">
+                <label for="item-category">หมวดหมู่</label>
+                <select id="item-category">
+                    <option value="ข้าว">ข้าว</option>
+                    <option value="เส้น">เส้น</option>
+                    <option value="เครื่องดื่ม">เครื่องดื่ม</option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="item-description">รายละเอียดสินค้า</label>
+                <textarea id="item-description" placeholder="กรอกรายละเอียดสินค้า"></textarea>
+            </div>
+            <div class="actions">
+                <button type="button" class="save" onclick="saveItem()">บันทึก</button>
+                <button type="button" class="cancel" onclick="clearForm()">ยกเลิก</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const preview = document.getElementById('image-preview');
+                preview.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function saveItem() {
+            const itemName = document.getElementById('item-name').value;
+            const itemPrice = document.getElementById('item-price').value;
+            const itemCategory = document.getElementById('item-category').value;
+            const itemDescription = document.getElementById('item-description').value;
+            const itemImageFile = document.getElementById('item-image').files[0];
+
+            if (!itemName || !itemPrice || !itemCategory || !itemImageFile) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ข้อมูลไม่ครบถ้วน',
+                    text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง!'
+                });
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function () {
+                const imageURL = reader.result;  // Base64 image URL
+
+                const formData = {
+                    nameId: itemName, // Adjust if necessary
+                    numberId: itemPrice, // Adjust if necessary
+                    roleId: itemCategory, // Adjust if necessary
+                    base64: imageURL.split(',')[1], // Extract base64 part (remove prefix)
+                    type: itemImageFile.type,
+                    name: itemImageFile.name
+                };
+
+                fetch('https://script.google.com/macros/s/AKfycbzmTzKbRhF2HDx08c_nyiGC9zEX0cf-P8-1T8xVjDymTLFyI8eeUBH2FG4DVWEJJ4__/exec', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'บันทึกข้อมูลสำเร็จ!',
+                            text: 'สินค้าของคุณถูกเพิ่มเรียบร้อยแล้ว'
+                        });
+                        clearForm();
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'เกิดข้อผิดพลาด',
+                            text: 'ไม่สามารถบันทึกข้อมูลได้'
+                        });
+                    });
+            };
+            reader.readAsDataURL(itemImageFile);
+        }
+
+        function clearForm() {
+            Swal.fire({
+                title: 'คุณต้องการล้างข้อมูลหรือไม่?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#f44336',
+                cancelButtonColor: '#999999',
+                confirmButtonText: 'ล้างข้อมูล',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('add-item-form').reset();
+                    document.getElementById('image-preview').src = '';
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ล้างข้อมูลสำเร็จ',
+                        text: 'ข้อมูลทั้งหมดถูกล้างเรียบร้อย'
+                    });
+                }
+            });
+        }
+    </script>
+
+
+    <script>
+        let url = "//";
+        let file = document.querySelector("input[type='file']");
+        let img = document.querySelector("img");
+        let nameIdInput = document.getElementById("nameId");
+        let roleId = document.getElementById("roleId");
+        let numberIdInput = document.getElementById("numberId");
+        let submitBtn = document.getElementById("submitBtn");
+
+        submitBtn.addEventListener('click', () => {
+            let fr = new FileReader();
+            fr.addEventListener('loadend', () => {
+                let res = fr.result;
+                img.src = res;
+                let spt = res.split("base64,")[1];
+
+                let obj = {
+                    base64: spt,
+                    type: file.files[0].type,
+                    name: file.files[0].name,
+                    nameId: nameIdInput.value,
+                    roleId: roleId.value,
+                    numberId: numberIdInput.value
+                }
+
+                fetch(url, {
+                    method: "POST",
+                    body: JSON.stringify(obj)
+                })
+                    .then(r => r.text())
+                    .then(data => console.log(data))
+            })
+
+            fr.readAsDataURL(file.files[0]);
+        });
+    </script>
+</body>
+
+</html>
