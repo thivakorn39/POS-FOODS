@@ -127,6 +127,13 @@
     </div>
 
     <script>
+        const url = "https://script.google.com/macros/s/AKfycbxDrsqVSsIvA7A0X66JbI3wJ7ixky1JLbKJBHlraA_wacy6PWOXP3IE_v8zLrKAeyk8/exec";
+        const itemName = document.getElementById('item-name').value;
+        const itemPrice = document.getElementById('item-price').value;
+        const itemCategory = document.getElementById('item-category').value;
+        const itemDescription = document.getElementById('item-description').value;
+        const itemImageFile = document.getElementById('item-image').files[0];
+
         function previewImage(event) {
             const reader = new FileReader();
             reader.onload = function () {
@@ -137,13 +144,6 @@
         }
 
         function saveItem() {
-            const url = "https://script.google.com/macros/s/AKfycbxDrsqVSsIvA7A0X66JbI3wJ7ixky1JLbKJBHlraA_wacy6PWOXP3IE_v8zLrKAeyk8/exec";
-            const itemName = document.getElementById('item-name').value;
-            const itemPrice = document.getElementById('item-price').value;
-            const itemCategory = document.getElementById('item-category').value;
-            const itemDescription = document.getElementById('item-description').value;
-            const itemImageFile = document.getElementById('item-image').files[0];
-
             if (!itemName || !itemPrice || !itemCategory || !itemImageFile) {
                 Swal.fire({
                     icon: 'error',
