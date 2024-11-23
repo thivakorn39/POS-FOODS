@@ -161,12 +161,13 @@
                     itemPrice: itemPrice,
                     itemCategory: itemCategory,
                     itemDescription: itemDescription,
-                    imageURL: imageURL
+                    imageURL: imageURL.split(',')[1],
                 };
 
-                fetch('https://script.google.com/macros/s/AKfycbw5pkQ_m5VOD_uq-QKQfUJNOBUJOgLytzeq7njr8EP2Ztf1uM08E2_tKKhwj40cNzJW/exec', {
+                fetch('https://script.google.com/macros/s/AKfycbxDVYwtjYBBXUPpq41pMFKmVnUnmFuTbS-g6GxMK8H1MRuQyEP9VuYZYQbN0FVHk5lR/exec', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
                     body: JSON.stringify(formData)
                 })
                     .then(response => response.json())
