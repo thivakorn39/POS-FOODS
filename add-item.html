@@ -137,6 +137,7 @@
         }
 
         function saveItem() {
+            const url = "https://script.google.com/macros/s/AKfycbxDrsqVSsIvA7A0X66JbI3wJ7ixky1JLbKJBHlraA_wacy6PWOXP3IE_v8zLrKAeyk8/exec";
             const itemName = document.getElementById('item-name').value;
             const itemPrice = document.getElementById('item-price').value;
             const itemCategory = document.getElementById('item-category').value;
@@ -164,7 +165,7 @@
                     imageURL: imageURL.split(',')[1],
                 };
 
-                fetch('https://script.google.com/macros/s/AKfycbxDVYwtjYBBXUPpq41pMFKmVnUnmFuTbS-g6GxMK8H1MRuQyEP9VuYZYQbN0FVHk5lR/exec', {
+                fetch(url, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     mode: 'cors',
