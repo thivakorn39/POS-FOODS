@@ -8,7 +8,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <style>
-        /* Styles remain unchanged */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -155,18 +154,17 @@
 
             const reader = new FileReader();
             reader.onload = function () {
-                const imageURL = reader.result;  // Base64 image URL
+                const imageURL = reader.result;
 
                 const formData = {
-                    nameId: itemName, // Adjust if necessary
-                    numberId: itemPrice, // Adjust if necessary
-                    roleId: itemCategory, // Adjust if necessary
-                    base64: imageURL.split(',')[1], // Extract base64 part (remove prefix)
-                    type: itemImageFile.type,
-                    name: itemImageFile.name
+                    itemName: itemName,
+                    itemPrice: itemPrice,
+                    itemCategory: itemCategory,
+                    itemDescription: itemDescription,
+                    imageURL: imageURL
                 };
 
-                fetch('https://script.google.com/macros/s/AKfycbzmTzKbRhF2HDx08c_nyiGC9zEX0cf-P8-1T8xVjDymTLFyI8eeUBH2FG4DVWEJJ4__/exec', {
+                fetch('https://script.google.com/macros/s/AKfycbw5pkQ_m5VOD_uq-QKQfUJNOBUJOgLytzeq7njr8EP2Ztf1uM08E2_tKKhwj40cNzJW/exec', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
@@ -212,7 +210,7 @@
                 }
             });
         }
-    </script>    
+    </script>
 </body>
 
 </html>
