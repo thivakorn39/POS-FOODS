@@ -14,77 +14,114 @@
     <div class="container mx-auto mt-8 p-4 bg-white rounded-lg shadow-md">
         <h1 class="text-2xl font-semibold mb-4">Form</h1>
 
-        <form>
+        <form id="item-form">
             <div class="mb-4">
-                <label for="nameId" class="block text-sm font-medium text-gray-600">ชื่อสินค้า</label>
-                <input type="text" id="nameId" name="nameId" placeholder="Enter nameId"
+                <label for="item-name" class="block text-sm font-medium text-gray-600">ชื่อสินค้า</label>
+                <input type="text" id="item-name" placeholder="กรอกชื่อสินค้า"
                     class="mt-1 p-2 border rounded-md w-full">
             </div>
 
             <div class="mb-4">
-                <label for="roleId" class="block text-sm font-medium text-gray-600">ราคา (บาท)</label>
-                <input type="text" id="roleId" name="roleId" placeholder="Enter roleId"
-                    class="mt-1 p-2 border rounded-md w-full">
+                <label for="item-price" class="block text-sm font-medium text-gray-600">ราคา (บาท)</label>
+                <input type="number" id="item-price" placeholder="กรอกราคา" class="mt-1 p-2 border rounded-md w-full">
             </div>
 
             <div class="mb-4">
-                <label for="numberId" class="block text-sm font-medium text-gray-600">หมวดหมู่</label>
-               
-                    <select id="numberId">
-                        <option value="ข้าว">ข้าว</option>
-                        <option value="เส้น">เส้น</option>
-                        <option value="เครื่องดื่ม">เครื่องดื่ม</option>
-                        <option value="อื่นๆ">อื่นๆ</option>
-                    </select>    
+                <label for="item-image" class="block text-sm font-medium text-gray-600">อัพโหลดภาพ</label>
+                <input type="file" id="item-image" accept="image/*" class="mt-1 p-2 border rounded-md"
+                    onchange="previewImage(event)">
+                <img id="image-preview" class="mt-2 w-24 h-24" alt="Preview" />
             </div>
 
             <div class="mb-4">
-                <label for="file" class="block text-sm font-medium text-gray-600">อัพโหลดรูปภาพ</label>
-                <input type="file" id="file" name="file" accept="image/*" class="mt-1 p-2 border rounded-md">
+                <label for="item-category" class="block text-sm font-medium text-gray-600">หมวดหมู่</label>
+                <select id="item-category" class="mt-1 p-2 border rounded-md w-full">
+                    <option value="ข้าว">ข้าว</option>
+                    <option value="เส้น">เส้น</option>
+                    <option value="เครื่องดื่ม">เครื่องดื่ม</option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                </select>
             </div>
 
             <div class="mb-4">
-                <img src="https://via.placeholder.com/100" alt="รูปภาพ" id="preview" class="mt-2 w-24 h-24">
+                <label for="item-description" class="block text-sm font-medium text-gray-600">รายละเอียดสินค้า</label>
+                <textarea id="item-description" placeholder="กรอกรายละเอียดสินค้า"
+                    class="mt-1 p-2 border rounded-md w-full"></textarea>
             </div>
-            <button type="button" id="submitBtn"
-                class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Submit</button>
+
+            <div class="flex gap-2">
+                <button type="button" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+                    onclick="saveItem()">บันทึก</button>
+                <button type="button" class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-700"
+                    onclick="clearForm()">ยกเลิก</button>
+            </div>
         </form>
     </div>
+
     <script>
-        let url = "https://script.google.com/macros/s/AKfycbxDrsqVSsIvA7A0X66JbI3wJ7ixky1JLbKJBHlraA_wacy6PWOXP3IE_v8zLrKAeyk8/exec";
-        let file = document.querySelector("input[type='file']");
-        let img = document.querySelector("img");
-        let nameIdInput = document.getElementById("nameId");
-        let roleId = document.getElementById("roleId");
-        let numberIdInput = document.getElementById("numberId");
-        let submitBtn = document.getElementById("submitBtn");
+        const url = "https://script.google.com/macros/s/AKfycbxDrsqVSsIvA7A0X66JbI3wJ7ixky1JLbKJBHlraA_wacy6PWOXP3IE_v8zLrKAeyk8/exec";
 
-        submitBtn.addEventListener('click', () => {
-            let fr = new FileReader();
-            fr.addEventListener('loadend', () => {
-                let res = fr.result;
-                img.src = res;
-                let spt = res.split("base64,")[1];
+        function previewImage(event) {
+            const imagePreview = document.getElementById('image-preview');
+            const file = event.target.files[0];
 
-                let obj = {
-                    base64: spt,
-                    type: file.files[0].type,
-                    name: file.files[0].name,
-                    nameId: nameIdInput.value,
-                    roleId: roleId.value,
-                    numberId: numberIdInput.value
-                }
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    imagePreview.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function saveItem() {
+            const itemName = document.getElementById('item-name').value;
+            const itemPrice = document.getElementById('item-price').value;
+            const itemCategory = document.getElementById('item-category').value;
+            const itemDescription = document.getElementById('item-description').value;
+            const itemImage = document.getElementById('item-image').files[0];
+
+            if (!itemName || !itemPrice || !itemCategory || !itemImage) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                const base64Image = reader.result.split('base64,')[1];
+
+                const data = {
+                    name: itemName,
+                    price: itemPrice,
+                    category: itemCategory,
+                    description: itemDescription,
+                    image: base64Image,
+                    imageType: itemImage.type,
+                };
 
                 fetch(url, {
-                    method: "POST",
-                    body: JSON.stringify(obj)
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
                 })
-                    .then(r => r.text())
-                    .then(data => console.log(data))
-            })
+                    .then(response => response.text())
+                    .then(result => {
+                        console.log(result);
+                        alert('บันทึกข้อมูลเรียบร้อย');
+                        clearForm();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+                    });
+            };
+            reader.readAsDataURL(itemImage);
+        }
 
-            fr.readAsDataURL(file.files[0]);
-        });
+        function clearForm() {
+            document.getElementById('item-form').reset();
+            document.getElementById('image-preview').src = '';
+        }
     </script>
 
 </body>
