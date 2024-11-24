@@ -335,21 +335,19 @@
             const menuContainer = document.getElementById('menu-container');
             const apiUrl = "https://script.google.com/macros/s/AKfycbyyfz8TdjcWHp61VAH7xoEfIdws3C_unOpdZ584Tn40U4uEGNZ7Eck5eAEmjMCmERET/exec"; // URL ของ Google Apps Script
 
-            // ดึงข้อมูลจาก API
             fetch(apiUrl)
                 .then(response => response.json())  // แปลงข้อมูลเป็น JSON
                 .then(data => {
                     if (Array.isArray(data)) {
                         data.forEach(item => {
-                            // ตรวจสอบว่า item.imageUrl มีค่าที่ถูกต้องหรือไม่
                             let imageUrl = '';
 
-                            // ตรวจสอบว่า item.imageUrl เป็น object หรือไม่
+                            // ตรวจสอบว่า imageUrl เป็น object ที่มี valueType: 'IMAGE'
                             if (item.imageUrl && typeof item.imageUrl === 'object' && item.imageUrl.valueType === 'IMAGE') {
-                                // ดึง URL จาก valueType = 'IMAGE'
-                                imageUrl = item.imageUrl.url || ''; // ตรวจสอบว่า object มี property url หรือไม่
+                                // ลองดึง URL ที่แท้จริงจากอ็อบเจ็กต์ imageUrl
+                                imageUrl = item.imageUrl.url || '';  // ตรวจสอบว่า object มี property url หรือไม่
                             } else if (typeof item.imageUrl === 'string') {
-                                // ถ้า imageUrl เป็น string ก็ใช้ URL ตรงๆ
+                                // ถ้า imageUrl เป็น string (URL แบบธรรมดา)
                                 imageUrl = item.imageUrl;
                             }
 
@@ -361,7 +359,7 @@
                             <img src="${imageUrl}" alt="${item.nameId}">
                             <p>${item.nameId} - ${item.roleId}</p>
                         `;
-                                menuContainer.appendChild(menuItem); // เพิ่มเมนูลงใน container
+                                menuContainer.appendChild(menuItem);  // เพิ่มเมนูลงใน container
                             } else {
                                 console.error('Invalid or missing image URL for:', item.nameId);
                             }
