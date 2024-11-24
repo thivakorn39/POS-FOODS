@@ -341,17 +341,29 @@
                 .then(data => {
                     if (Array.isArray(data)) {
                         data.forEach(item => {
-                            // ตรวจสอบว่า item.imageUrl เป็น string หรือไม่
-                            if (typeof item.imageUrl === 'string') {
+                            // ตรวจสอบว่า item.imageUrl มีค่าที่ถูกต้องหรือไม่
+                            let imageUrl = '';
+
+                            // ตรวจสอบว่า item.imageUrl เป็น object หรือไม่
+                            if (item.imageUrl && typeof item.imageUrl === 'object' && item.imageUrl.valueType === 'IMAGE') {
+                                // ดึง URL จาก valueType = 'IMAGE'
+                                imageUrl = item.imageUrl.url || ''; // ตรวจสอบว่า object มี property url หรือไม่
+                            } else if (typeof item.imageUrl === 'string') {
+                                // ถ้า imageUrl เป็น string ก็ใช้ URL ตรงๆ
+                                imageUrl = item.imageUrl;
+                            }
+
+                            // ตรวจสอบว่า imageUrl มีค่าหรือไม่ ก่อนแสดง
+                            if (imageUrl) {
                                 const menuItem = document.createElement('div');
                                 menuItem.classList.add('menu-item');
                                 menuItem.innerHTML = `
-                            <img src="${item.imageUrl}" alt="${item.nameId}">
+                            <img src="${imageUrl}" alt="${item.nameId}">
                             <p>${item.nameId} - ${item.roleId}</p>
                         `;
                                 menuContainer.appendChild(menuItem); // เพิ่มเมนูลงใน container
                             } else {
-                                console.error('Invalid image URL:', item.imageUrl);
+                                console.error('Invalid or missing image URL for:', item.nameId);
                             }
                         });
                     } else {
