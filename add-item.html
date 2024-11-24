@@ -136,70 +136,7 @@
             };
             reader.readAsDataURL(event.target.files[0]);
         }
-
-        function saveItem() {
-            const itemName = document.getElementById('item-name').value.trim();
-            const itemPrice = document.getElementById('item-price').value.trim();
-            const itemCategory = document.getElementById('item-category').value;
-            const itemDescription = document.getElementById('item-description').value.trim();
-            const itemImageFile = document.getElementById('item-image').files[0];
-
-            if (!itemName || !itemPrice || !itemCategory || !itemImageFile) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'ข้อมูลไม่ครบถ้วน',
-                    text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง!'
-                });
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function () {
-                const imageURL = reader.result;
-
-                const formData = {
-                    itemName: itemName,
-                    itemPrice: itemPrice,
-                    itemCategory: itemCategory,
-                    itemDescription: itemDescription,
-                    imageURL: imageURL.split(',')[1],
-                };
-
-                const url = "https://script.google.com/macros/s/AKfycbzPOvfPFp_0VPtpglqWbBkNmLAc8m96-dOvkMgFHSChqJINT8QFhFMBKh3NjUml_hWe/exec"; // ใส่ URL ของ Web App ที่คุณ Deploy
-                fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'บันทึกข้อมูลสำเร็จ!',
-                                text: 'สินค้าของคุณถูกเพิ่มเรียบร้อยแล้ว.'
-                            }).then(() => {
-                                clearForm();
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'เกิดข้อผิดพลาด',
-                                text: 'ไม่สามารถบันทึกข้อมูลได้!'
-                            });
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'เกิดข้อผิดพลาด',
-                            text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้!'
-                        });
-                    });
-            };
-            reader.readAsDataURL(itemImageFile);
-        }
-
+       
         function clearForm() {
             document.getElementById('add-item-form').reset();
             document.getElementById('image-preview').src = "";
