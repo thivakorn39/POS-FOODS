@@ -129,41 +129,41 @@
 
     <script>
         function previewImage(event) {
-            const reader = new FileReader();
+            var reader = new FileReader();
             reader.onload = function () {
-                const preview = document.getElementById('image-preview');
+                var preview = document.getElementById('image-preview');
                 preview.src = reader.result;
             };
             reader.readAsDataURL(event.target.files[0]);
         }
 
         async function saveItem() {
-            const name = document.getElementById("item-name").value;
-            const price = document.getElementById("item-price").value;
-            const category = document.getElementById("item-category").value;
-            const description = document.getElementById("item-description").value;
-            const imageInput = document.getElementById("item-image");
-            const imageFile = imageInput.files[0];
+            var name = document.getElementById("item-name").value;
+            var price = document.getElementById("item-price").value;
+            var category = document.getElementById("item-category").value;
+            var description = document.getElementById("item-description").value;
+            var imageInput = document.getElementById("item-image");
+            var imageFile = imageInput.files[0];
 
             if (!name || !price || !category || !description || !imageFile) {
                 Swal.fire("กรุณากรอกข้อมูลให้ครบถ้วน");
                 return;
             }
 
-            const reader = new FileReader();
+            var reader = new FileReader();
             reader.onload = async function () {
-                const imageData = reader.result;
+                var imageData = reader.result;
 
-                const data = {
-                    name,
-                    price,
-                    category,
-                    description,
+                var data = {
+                    name: name,
+                    price: price,
+                    category: category,
+                    description: description,
                     image: imageData
                 };
 
                 try {
-                    const response = await fetch('https://script.google.com/macros/s/AKfycbyXxwZc0glFB8pAntmnDYTW1fMNvSkVN_9IKQHq5E6o1fntrQJwfNjP855upAPmW5jD/exec', {
+                    var response = await fetch('https://script.google.com/macros/s/AKfycbz8pNz8CPufeKLwD0lsmC7QFtAy6_-i96-40UH2uBiWp_QTm12d5flYOl-SUZK0tMeK/exec', {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -172,7 +172,7 @@
                     });
 
                     if (response.ok) {
-                        const result = await response.json();
+                        var result = await response.json();
                         Swal.fire("บันทึกสำเร็จ!", `ไฟล์ถูกอัพโหลดไปยัง: ${result.fileUrl}`, "success");
                         clearForm();
                     } else {
@@ -186,8 +186,14 @@
             reader.readAsDataURL(imageFile);
         }
 
-
+        function clearForm() {
+            var form = document.getElementById("add-item-form");
+            form.reset();
+            var preview = document.getElementById('image-preview');
+            preview.src = "";
+        }
     </script>
+
 </body>
 
 </html>
