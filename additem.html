@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -134,6 +135,14 @@
         let submitBtn = document.getElementById("submitBtn");
         let cancelBtn = document.getElementById("cancelBtn");
 
+        const resetForm = () => {
+            nameIdInput.value = "";
+            roleIdInput.value = "";
+            numberIdInput.value = "ข้าว";
+            file.value = "";
+            img.src = "https://via.placeholder.com/100";
+        };
+
         submitBtn.addEventListener('click', () => {
             let fr = new FileReader();
             fr.addEventListener('loadend', () => {
@@ -155,22 +164,50 @@
                     body: JSON.stringify(obj)
                 })
                     .then(r => r.text())
-                    .then(data => console.log(data));
+                    .then(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'บันทึกสำเร็จ',
+                            text: 'ข้อมูลของคุณถูกบันทึกแล้ว!',
+                            confirmButtonText: 'ตกลง'
+                        }).then(() => {
+                            resetForm();
+                        });
+                    })
+                    .catch(() => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'เกิดข้อผิดพลาด',
+                            text: 'ไม่สามารถบันทึกข้อมูลได้!'
+                        });
+                    });
             });
 
             if (file.files.length > 0) {
                 fr.readAsDataURL(file.files[0]);
             } else {
-                alert("กรุณาอัพโหลดไฟล์");
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'กรุณาอัพโหลดไฟล์',
+                    text: 'คุณต้องอัพโหลดไฟล์ก่อนที่จะบันทึกข้อมูล'
+                });
             }
         });
 
         cancelBtn.addEventListener('click', () => {
-            nameIdInput.value = "";
-            roleIdInput.value = "";
-            numberIdInput.value = "ข้าว";
-            file.value = "";
-            img.src = "https://via.placeholder.com/100";
+            Swal.fire({
+                title: 'คุณแน่ใจหรือไม่?',
+                text: "ข้อมูลทั้งหมดจะถูกล้าง!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'ใช่, ล้างข้อมูล',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    resetForm();
+                    Swal.fire('ล้างข้อมูลเรียบร้อย!', '', 'success');
+                }
+            });
         });
     </script>
 </body>
