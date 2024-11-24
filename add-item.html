@@ -144,9 +144,13 @@
             const form = document.getElementById('add-item-form');
             const formData = new FormData(form);
 
-            fetch('https://script.google.com/macros/s/AKfycbyPinqEMWx6iCsHrRvK3HyjoWv1Ap-qKQHQmIe21jSw6pmXldqlcKynVGekv_dPfXQV/exec', { // แทนที่ด้วย URL ของ Web App
+            // URL ของ Google Apps Script Web App
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyPinqEMWx6iCsHrRvK3HyjoWv1Ap-qKQHQmIe21jSw6pmXldqlcKynVGekv_dPfXQV/exec';
+
+            // ส่งข้อมูลผ่าน fetch
+            fetch(scriptURL, {
                 method: 'POST',
-                body: formData
+                body: formData,
             })
                 .then(response => response.text())
                 .then(result => {
@@ -168,6 +172,7 @@
             preview.src = "";
         }
     </script>
+
 </body>
 
 </html>
