@@ -333,7 +333,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const menuContainer = document.getElementById('menu-container');
-            const apiUrl = "https://script.google.com/macros/s/AKfycbzEUrR75d0pyestO5L6KNUULoZ84EVogLnDtxaaMcTtJmJA6rDuZRngNRqtQLOEVikh/exec"; // ใส่ URL ที่ได้จาก GAS
+            const apiUrl = "https://script.google.com/macros/s/AKfycbwwzO93yEjaH0bu53SJCwtpSUR_cQvC73gLcJFcgPm0GHPEmVVThbV9yqbSkHJe7U6L/exec"; // ใส่ URL ที่ได้จาก GAS
 
             fetch(apiUrl)
                 .then(response => response.json())
@@ -342,15 +342,16 @@
                         const menuItem = document.createElement('div');
                         menuItem.classList.add('menu-item');
                         menuItem.innerHTML = `
-                    <img src="${item.imageUrl}" alt="${item.nameId}">
-                    <p>${item.nameId} - ${item.roleId}</p>
-                `;
+                <img src="${item.imageUrl}" alt="${item.nameId}">
+                <p>${item.nameId} - ${item.roleId}</p>
+            `;
                         menuContainer.appendChild(menuItem);
                     });
                 })
                 .catch(error => {
                     console.error('Error fetching data:', error);
                 });
+
         });
 
     </script>
