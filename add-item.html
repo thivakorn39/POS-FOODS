@@ -1,149 +1,31 @@
 <!DOCTYPE html>
-<html lang="th">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Item</title>
+    <title>เพิ่มสินค้าใหม่</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
-    <style>
-        /* CSS styles for your form */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            height: 100px;
-        }
-
-        .form-group .preview {
-            display: block;
-            margin-top: 10px;
-            border-radius: 5px;
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-        }
-
-        .actions {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .actions button {
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .actions .save {
-            background-color: #8bc34a;
-            color: white;
-        }
-
-        .actions .cancel {
-            background-color: #f44336;
-            color: white;
-        }
-    </style>
 </head>
-
 <body>
     <div class="container">
         <h1>เพิ่มสินค้าใหม่</h1>
-        <!-- <form id="add-item-form">
+        <form id="add-item-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="nameId">ชื่อสินค้า</label>
-                <input type="text" id="nameId" placeholder="กรอกชื่อสินค้า">
+                <input type="text" id="nameId" name="nameId" placeholder="กรอกชื่อสินค้า">
             </div>
             <div class="form-group">
                 <label for="priceId">ราคา (บาท)</label>
-                <input type="number" id="priceId" placeholder="กรอกราคา">
-            </div>
-            <div class="form-group">
-                <label for="imageId">อัพโหลดภาพ</label>
-                <input type="file" id="imageId" accept="image/*" onchange="previewImage(event)">
-                <img id="image-preview" class="preview" alt="Preview" />
-            </div>
-            <div class="form-group">
-                <label for="categoryId">หมวดหมู่</label>
-                <select id="categoryId">
-                    <option value="ข้าว">ข้าว</option>
-                    <option value="เส้น">เส้น</option>
-                    <option value="เครื่องดื่ม">เครื่องดื่ม</option>
-                    <option value="อื่นๆ">อื่นๆ</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="descriptionId">รายละเอียดสินค้า</label>
-                <textarea id="descriptionId" placeholder="กรอกรายละเอียดสินค้า"></textarea>
-            </div>
-            <div class="actions">
-                <button type="button" class="save" onclick="submitForm(event)">บันทึก</button>
-                <button type="button" class="cancel" onclick="clearForm()">ยกเลิก</button>
-            </div>
-        </form> -->
-
-        <form id="add-item-form">
-            <div class="form-group">
-                <label for="nameId">ชื่อสินค้า</label>
-                <input type="text" id="nameId" name="nameId" placeholder="กรอกชื่อสินค้า"> <!-- เพิ่ม name -->
-            </div>
-            <div class="form-group">
-                <label for="priceId">ราคา (บาท)</label>
-                <input type="number" id="priceId" name="priceId" placeholder="กรอกราคา"> <!-- เพิ่ม name -->
+                <input type="number" id="priceId" name="priceId" placeholder="กรอกราคา">
             </div>
             <div class="form-group">
                 <label for="imageId">อัพโหลดภาพ</label>
                 <input type="file" id="imageId" name="imageId" accept="image/*" onchange="previewImage(event)">
-                <!-- เพิ่ม name -->
-                <img id="image-preview" class="preview" alt="Preview" />
+                <img id="image-preview" class="preview" alt="Preview">
             </div>
             <div class="form-group">
                 <label for="categoryId">หมวดหมู่</label>
-                <select id="categoryId" name="categoryId"> <!-- เพิ่ม name -->
+                <select id="categoryId" name="categoryId">
                     <option value="ข้าว">ข้าว</option>
                     <option value="เส้น">เส้น</option>
                     <option value="เครื่องดื่ม">เครื่องดื่ม</option>
@@ -153,21 +35,19 @@
             <div class="form-group">
                 <label for="descriptionId">รายละเอียดสินค้า</label>
                 <textarea id="descriptionId" name="descriptionId" placeholder="กรอกรายละเอียดสินค้า"></textarea>
-                <!-- เพิ่ม name -->
             </div>
             <div class="actions">
-                <button type="button" class="save" onclick="submitForm(event)">บันทึก</button>
-                <button type="button" class="cancel" onclick="clearForm()">ยกเลิก</button>
+                <button type="button" onclick="submitForm(event)">บันทึก</button>
+                <button type="button" onclick="clearForm()">ยกเลิก</button>
             </div>
         </form>
-
     </div>
 
     <script>
         function previewImage(event) {
-            var reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = function () {
-                var preview = document.getElementById('image-preview');
+                const preview = document.getElementById('image-preview');
                 preview.src = reader.result;
             };
             reader.readAsDataURL(event.target.files[0]);
@@ -179,34 +59,29 @@
             const form = document.getElementById('add-item-form');
             const formData = new FormData(form);
 
-            fetch('https://script.google.com/macros/s/AKfycbxeNiX8_35yFysmGIuGOaQl9l7oC7r7Ixc3cvhGFtoAmXFQZRE4Ac5s_qSj_jwE9Uog/exec', {
+            fetch('https://script.google.com/macros/s/AKfycbwxt7SOKy_4gPKG2cjy9Lj2nZC1-mmC2NMhEpT8ji2gumUmXJcx5DfDWSchzfN1XaaY/exec', { // แทนที่ด้วย URL ของ Web App
                 method: 'POST',
                 body: formData
             })
-                .then(response => response.text())
-                .then(result => {
-                    console.log("Response:", result); // ดูผลตอบกลับใน Console
-                    if (result === 'Success') {
-                        Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success');
-                    } else {
-                        Swal.fire('ล้มเหลว', 'การบันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่.', 'error');
-                    }
-                })
-                .catch(error => {
-                    console.error("Error:", error.message);
-                    Swal.fire('เกิดข้อผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message, 'error');
-                });
+            .then(response => response.text())
+            .then(result => {
+                if (result === 'Success') {
+                    Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success');
+                } else {
+                    Swal.fire('ล้มเหลว', 'การบันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่.', 'error');
+                }
+            })
+            .catch(error => {
+                Swal.fire('เกิดข้อผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message, 'error');
+            });
         }
 
-
         function clearForm() {
-            var form = document.getElementById("add-item-form");
+            const form = document.getElementById("add-item-form");
             form.reset();
-            var preview = document.getElementById('image-preview');
+            const preview = document.getElementById('image-preview');
             preview.src = "";
         }
     </script>
-
 </body>
-
 </html>
