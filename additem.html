@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+
+        .form-group .preview {
+            display: block;
+            margin-top: 10px;
+            border-radius: 5px;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .actions button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .actions .save {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .actions .cancel {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Form</h1>
+        <form>
+            <div class="form-group">
+                <label for="nameId">ชื่อสินค้า</label>
+                <input type="text" id="nameId" name="nameId" placeholder="Enter product name">
+            </div>
+
+            <div class="form-group">
+                <label for="roleId">ราคา (บาท)</label>
+                <input type="text" id="roleId" name="roleId" placeholder="Enter price">
+            </div>
+
+            <div class="form-group">
+                <label for="numberId">หมวดหมู่</label>
+                <select id="numberId" name="numberId">
+                    <option value="ข้าว">ข้าว</option>
+                    <option value="เส้น">เส้น</option>
+                    <option value="เครื่องดื่ม">เครื่องดื่ม</option>
+                    <option value="อื่นๆ">อื่นๆ</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="file">อัพโหลดรูปภาพ</label>
+                <input type="file" id="file" name="file" accept="image/*">
+                <img src="https://via.placeholder.com/100" alt="รูปภาพ" id="preview" class="preview">
+            </div>
+
+            <div class="actions">
+                <button type="button" id="submitBtn" class="save">Submit</button>
+                <button type="button" id="cancelBtn" class="cancel">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let url = "https://script.google.com/macros/s/AKfycbxDrsqVSsIvA7A0X66JbI3wJ7ixky1JLbKJBHlraA_wacy6PWOXP3IE_v8zLrKAeyk8/exec";
+        let file = document.querySelector("input[type='file']");
+        let img = document.querySelector("img");
+        let nameIdInput = document.getElementById("nameId");
+        let roleIdInput = document.getElementById("roleId");
+        let numberIdInput = document.getElementById("numberId");
+        let submitBtn = document.getElementById("submitBtn");
+        let cancelBtn = document.getElementById("cancelBtn");
+
+        const resetForm = () => {
+            nameIdInput.value = "";
+            roleIdInput.value = "";
+            numberIdInput.value = "ข้าว";
+            file.value = "";
+            img.src = "https://via.placeholder.com/100";
+        };
+
+        const resizeImage = (file, callback) => {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+                    canvas.width = 100;
+                    canvas.height = 100;
+                    ctx.drawImage(img, 0, 0, 100, 100);
+                    callback(canvas.toDataURL(file.type));
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        submitBtn.addEventListener('click', () => {
+            if (file.files.length > 0) {
+                resizeImage(file.files[0], (resizedImage) => {
+                    let spt = resizedImage.split("base64,")[1];
+
+                    let obj = {
+                        base64: spt,
+                        type: file.files[0].type,
+                        name: file.files[0].name,
+                        nameId: nameIdInput.value,
+                        roleId: roleIdInput.value,
+                        numberId: numberIdInput.value
+                    };
+
+                    fetch(url, {
+                        method: "POST",
+                        body: JSON.stringify(obj)
+                    })
+                        .then(r => r.text())
+                        .then(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'บันทึกสำเร็จ',
+                                text: 'ข้อมูลของคุณถูกบันทึกแล้ว!',
+                                confirmButtonText: 'ตกลง'
+                            }).then(() => {
+                                resetForm();
+                            });
+                        })
+                        .catch(() => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'เกิดข้อผิดพลาด',
+                                text: 'ไม่สามารถบันทึกข้อมูลได้!'
+                            });
+                        });
+                });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'กรุณาอัพโหลดไฟล์',
+                    text: 'คุณต้องอัพโหลดไฟล์ก่อนที่จะบันทึกข้อมูล'
+                });
+            }
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            Swal.fire({
+                title: 'คุณแน่ใจหรือไม่?',
+                text: "ข้อมูลทั้งหมดจะถูกล้าง!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'ใช่, ล้างข้อมูล',
+                cancelButtonText: 'ยกเลิก'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    resetForm();
+                    Swal.fire('ล้างข้อมูลเรียบร้อย!', '', 'success');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
