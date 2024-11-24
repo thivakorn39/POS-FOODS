@@ -95,21 +95,21 @@
         <h1>เพิ่มสินค้าใหม่</h1>
         <form id="add-item-form">
             <div class="form-group">
-                <label for="item-name">ชื่อสินค้า</label>
-                <input type="text" id="item-name" placeholder="กรอกชื่อสินค้า">
+                <label for="nameId">ชื่อสินค้า</label>
+                <input type="text" id="nameId" placeholder="กรอกชื่อสินค้า">
             </div>
             <div class="form-group">
-                <label for="item-price">ราคา (บาท)</label>
-                <input type="number" id="item-price" placeholder="กรอกราคา">
+                <label for="priceId">ราคา (บาท)</label>
+                <input type="number" id="priceId" placeholder="กรอกราคา">
             </div>
             <div class="form-group">
-                <label for="item-image">อัพโหลดภาพ</label>
-                <input type="file" id="item-image" accept="image/*" onchange="previewImage(event)">
+                <label for="imageId">อัพโหลดภาพ</label>
+                <input type="file" id="imageId" accept="image/*" onchange="previewImage(event)">
                 <img id="image-preview" class="preview" alt="Preview" />
             </div>
             <div class="form-group">
-                <label for="item-category">หมวดหมู่</label>
-                <select id="item-category">
+                <label for="categoryId">หมวดหมู่</label>
+                <select id="categoryId">
                     <option value="ข้าว">ข้าว</option>
                     <option value="เส้น">เส้น</option>
                     <option value="เครื่องดื่ม">เครื่องดื่ม</option>
@@ -117,11 +117,11 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="item-description">รายละเอียดสินค้า</label>
-                <textarea id="item-description" placeholder="กรอกรายละเอียดสินค้า"></textarea>
+                <label for="descriptionId">รายละเอียดสินค้า</label>
+                <textarea id="descriptionId" placeholder="กรอกรายละเอียดสินค้า"></textarea>
             </div>
             <div class="actions">
-                <button type="button" class="save" onclick="saveItem()">บันทึก</button>
+                <button type="button" class="save" onclick="submitForm(event)">บันทึก</button>
                 <button type="button" class="cancel" onclick="clearForm()">ยกเลิก</button>
             </div>
         </form>
@@ -137,53 +137,39 @@
             reader.readAsDataURL(event.target.files[0]);
         }
 
-        async function saveItem() {
-            var name = document.getElementById("item-name").value;
-            var price = document.getElementById("item-price").value;
-            var category = document.getElementById("item-category").value;
-            var description = document.getElementById("item-description").value;
-            var imageInput = document.getElementById("item-image");
-            var imageFile = imageInput.files[0];
+        function submitForm(event) {
+            event.preventDefault();
+    
+            // แสดงอนิเมชั่น loading
+            document.getElementById('loading').style.display = 'block';
+    
+            const form = document.getElementById('add-item-form');
+            const formData = new FormData(form);
+    
+            fetch('https://script.google.com/macros/s/AKfycbxOsYpQWr2gBlPIuqMJr-cDUBfLUXBA04a4AJyfQ4wTukDbcmF2dxICnT6ovPa-jUIL/exec', {  // แทนที่ด้วย URL ของ Google Apps Script Web App
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(result => {
+                // ซ่อนอนิเมชั่น loading เมื่อได้รับการตอบกลับ
+                document.getElementById('loading').style.display = 'none';
 
-            if (!name || !price || !category || !description || !imageFile) {
-                Swal.fire("กรุณากรอกข้อมูลให้ครบถ้วน");
-                return;
-            }
-
-            var reader = new FileReader();
-            reader.onload = async function () {
-                var imageData = reader.result;
-
-                var data = {
-                    name: name,
-                    price: price,
-                    category: category,
-                    description: description,
-                    image: imageData
-                };
-
-                try {
-                    var response = await fetch('https://script.google.com/macros/s/AKfycbz8pNz8CPufeKLwD0lsmC7QFtAy6_-i96-40UH2uBiWp_QTm12d5flYOl-SUZK0tMeK/exec', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify(data)
-                    });
-
-                    if (response.ok) {
-                        var result = await response.json();
-                        Swal.fire("บันทึกสำเร็จ!", `ไฟล์ถูกอัพโหลดไปยัง: ${result.fileUrl}`, "success");
-                        clearForm();
-                    } else {
-                        Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถบันทึกข้อมูลได้", "error");
-                    }
-                } catch (error) {
-                    Swal.fire("เกิดข้อผิดพลาด", error.message, "error");
+                switch (result) {
+                    case 'Success':
+                        Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success').then(() => {
+                            liff.closeWindow();  // ปิดหน้าเว็บเมื่อบันทึกข้อมูลสำเร็จ
+                        });
+                        break;
+                    default:
+                        Swal.fire('ล้มเหลว', 'การบันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่.', 'error');
+                        break;
                 }
-            };
-
-            reader.readAsDataURL(imageFile);
+            })
+            .catch(error => {
+                document.getElementById('loading').style.display = 'none';
+                Swal.fire('เกิดข้อผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message, 'error');
+            });
         }
 
         function clearForm() {
