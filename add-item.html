@@ -139,38 +139,29 @@
 
         function submitForm(event) {
             event.preventDefault();
-    
-            // แสดงอนิเมชั่น loading
-            document.getElementById('loading').style.display = 'block';
-    
+
             const form = document.getElementById('add-item-form');
             const formData = new FormData(form);
-    
-            fetch('https://script.google.com/macros/s/AKfycbxOsYpQWr2gBlPIuqMJr-cDUBfLUXBA04a4AJyfQ4wTukDbcmF2dxICnT6ovPa-jUIL/exec', {  // แทนที่ด้วย URL ของ Google Apps Script Web App
+
+            fetch('https://script.google.com/macros/s/AKfycbxeNiX8_35yFysmGIuGOaQl9l7oC7r7Ixc3cvhGFtoAmXFQZRE4Ac5s_qSj_jwE9Uog/exec', {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.text())
-            .then(result => {
-                // ซ่อนอนิเมชั่น loading เมื่อได้รับการตอบกลับ
-                document.getElementById('loading').style.display = 'none';
-
-                switch (result) {
-                    case 'Success':
-                        Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success').then(() => {
-                            liff.closeWindow();  // ปิดหน้าเว็บเมื่อบันทึกข้อมูลสำเร็จ
-                        });
-                        break;
-                    default:
+                .then(response => response.text())
+                .then(result => {
+                    console.log("Response:", result); // ดูผลตอบกลับใน Console
+                    if (result === 'Success') {
+                        Swal.fire('สำเร็จ!', 'การบันทึกข้อมูลสำเร็จ!', 'success');
+                    } else {
                         Swal.fire('ล้มเหลว', 'การบันทึกข้อมูลไม่สำเร็จ กรุณาลองใหม่.', 'error');
-                        break;
-                }
-            })
-            .catch(error => {
-                document.getElementById('loading').style.display = 'none';
-                Swal.fire('เกิดข้อผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message, 'error');
-            });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error.message);
+                    Swal.fire('เกิดข้อผิดพลาด', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล: ' + error.message, 'error');
+                });
         }
+
 
         function clearForm() {
             var form = document.getElementById("add-item-form");
