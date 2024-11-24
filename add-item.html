@@ -96,20 +96,20 @@
         <form id="add-item-form" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="nameId">ชื่อสินค้า</label>
-                <input type="text" id="nameId" name="nameId" placeholder="กรอกชื่อสินค้า">
+                <input type="text" id="nameId" name="nameId" placeholder="กรอกชื่อสินค้า" required>
             </div>
             <div class="form-group">
                 <label for="priceId">ราคา (บาท)</label>
-                <input type="number" id="priceId" name="priceId" placeholder="กรอกราคา">
+                <input type="number" id="priceId" name="priceId" placeholder="กรอกราคา" required>
             </div>
             <div class="form-group">
                 <label for="imageId">อัพโหลดภาพ</label>
-                <input type="file" id="imageId" name="imageId" accept="image/*" onchange="previewImage(event)">
+                <input type="file" id="imageId" name="imageId" accept="image/*" onchange="previewImage(event)" required>
                 <img id="image-preview" class="preview" alt="Preview">
             </div>
             <div class="form-group">
                 <label for="categoryId">หมวดหมู่</label>
-                <select id="categoryId" name="categoryId">
+                <select id="categoryId" name="categoryId" required>
                     <option value="ข้าว">ข้าว</option>
                     <option value="เส้น">เส้น</option>
                     <option value="เครื่องดื่ม">เครื่องดื่ม</option>
@@ -127,6 +127,7 @@
         </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function previewImage(event) {
             const reader = new FileReader();
@@ -143,7 +144,7 @@
             const form = document.getElementById('add-item-form');
             const formData = new FormData(form);
 
-            fetch('https://script.google.com/macros/s/AKfycbwxt7SOKy_4gPKG2cjy9Lj2nZC1-mmC2NMhEpT8ji2gumUmXJcx5DfDWSchzfN1XaaY/exec', { // แทนที่ด้วย URL ของ Web App
+            fetch('https://script.google.com/macros/s/AKfycbxrL8wzdNbN8EDEqPGdCgwCmmwerbV6xweLZml2pRS9wl71r8_AZDrqXXc3-gO91mQ/exec', { // แทนที่ด้วย URL ของ Web App
                 method: 'POST',
                 body: formData
             })
